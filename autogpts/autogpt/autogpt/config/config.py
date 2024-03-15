@@ -20,7 +20,7 @@ from autogpt.core.resource.model_providers.openai import (
     OPEN_AI_CHAT_MODELS,
     OpenAICredentials,
 )
-from autogpt.file_workspace import FileWorkspaceBackendName
+from autogpt.file_storage import FileStorageBackendName
 from autogpt.logs.config import LoggingConfig
 from autogpt.plugins.plugins_config import PluginsConfig
 from autogpt.speech import TTSConfig
@@ -57,11 +57,11 @@ class Config(SystemSettings, arbitrary_types_allowed=True):
     tts_config: TTSConfig = TTSConfig()
     logging: LoggingConfig = LoggingConfig()
 
-    # Workspace
-    workspace_backend: FileWorkspaceBackendName = UserConfigurable(
-        default=FileWorkspaceBackendName.LOCAL,
-        from_env=lambda: FileWorkspaceBackendName(v)
-        if (v := os.getenv("WORKSPACE_BACKEND"))
+    # File storage
+    file_storage_backend: FileStorageBackendName = UserConfigurable(
+        default=FileStorageBackendName.LOCAL,
+        from_env=lambda: FileStorageBackendName(v)
+        if (v := os.getenv("FILE_STORAGE_BACKEND"))
         else None,
     )
 
@@ -80,11 +80,11 @@ class Config(SystemSettings, arbitrary_types_allowed=True):
 
     # Model configuration
     fast_llm: str = UserConfigurable(
-        default="gpt-3.5-turbo-16k",
+        default="gpt-3.5-turbo-0125",
         from_env=lambda: os.getenv("FAST_LLM"),
     )
     smart_llm: str = UserConfigurable(
-        default="gpt-4",
+        default="gpt-4-turbo-preview",
         from_env=lambda: os.getenv("SMART_LLM"),
     )
     temperature: float = UserConfigurable(
@@ -95,7 +95,7 @@ class Config(SystemSettings, arbitrary_types_allowed=True):
         default=False, from_env=lambda: os.getenv("OPENAI_FUNCTIONS", "False") == "True"
     )
     embedding_model: str = UserConfigurable(
-        default="text-embedding-ada-002", from_env="EMBEDDING_MODEL"
+        default="text-embedding-3-small", from_env="EMBEDDING_MODEL"
     )
     browse_spacy_language_model: str = UserConfigurable(
         default="en_core_web_sm", from_env="BROWSE_SPACY_LANGUAGE_MODEL"
